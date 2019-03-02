@@ -4,21 +4,21 @@ import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 这里的API 只用到了 commons-httpclient   legacy版本
  */
 public class HttpClient3Util {
 
-    private final static Logger logger = LoggerFactory.getLogger(HttpClient3Util.class);
 
     private static MultiThreadedHttpConnectionManager httpConnectionManager = new MultiThreadedHttpConnectionManager();
     private static HttpClient client;
@@ -79,11 +79,11 @@ public class HttpClient3Util {
                 getRequest.setRequestHeader(headers[i]);
             }
         }
-        logger.debug("ExecuteGet url = {} , headers = {}", url, headers);
+        System.out.println("ExecuteGet url = " + url + " , headers = " + headers);
         try {
             response = executeMethod(getRequest, encoding);
         } catch (Exception e) {
-            logger.warn("ExecuteGet Error url = {} ", url, e);
+            e.printStackTrace();
             throw e;
         } finally {
             getRequest.releaseConnection();
@@ -118,10 +118,10 @@ public class HttpClient3Util {
         }
         postRequest.setRequestBody(params);
         try {
-            logger.debug("ExecutePost url = {} , headers = {}", url, headers);
+            System.out.println("ExecuteGet url = " + url + " , headers = " + headers);
             response = executeMethod(postRequest, encoding);
         } catch (Exception e) {
-            logger.warn("ExecutePost Error url = {} ", url, e);
+            e.printStackTrace();
             throw e;
         } finally {
             postRequest.releaseConnection();
@@ -199,14 +199,16 @@ public class HttpClient3Util {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    logger.error("reader 关闭失败 ", e);
+                    System.err.println("reader 关闭失败 ");
+                    e.printStackTrace();
                 }
             }
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    logger.error("inputStream 关闭失败 ", e);
+                    System.err.println("inputStream 关闭失败 ");
+                    e.printStackTrace();
                 }
             }
         }
